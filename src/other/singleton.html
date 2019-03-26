@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name=viewport content="width=device-width, initial-scale=1">
+  <title>Singleton w ES6</title>
+</head>
+<body>
+<h1>Singleton w ES6</h1>
+<p>
+  Poniżejprzykład implementacji Singletona w ES6.
+</p>
+<pre>
+  export class EmptySingleton {
+    constructor() {
+      if(EmptySingleton.singletonInstance) {
+        return EmptySingleton.singletonInstance;
+      }
+
+      EmptySingleton.singletonInstance = this;
+
+
+    }
+  }
+
+  export class SingletonExample {
+    constructor() {
+      if(SingletonExample.singletonInstance) {
+        return SingletonExample.singletonInstance;
+      }
+
+      SingletonExample.singletonInstance = this;
+
+      this.value = 1;
+    }
+
+    setValue(newValue) {
+      this.value = newValue;
+    }
+
+    getValue() {
+      return this.value;
+    }
+
+    printValue() {
+      console.log(this.value);
+    }
+  }
+</pre>
+<pre>
+  import {SingletonExample} from '../patterns/singleton';
+
+  export default class ComponentInfluencingSingleton {
+    constructor() {
+      this.singletonExample = new SingletonExample();
+    }
+
+    changeSingletonValue(newValue) {
+      this.singletonExample.setValue(newValue);
+    }
+  }
+</pre>
+<pre>
+  import {SingletonExample} from './patterns/singleton';
+  import ComponentInfluencingSingleton from './components/componentInfluencingSingleton';
+  function init() {
+    let s1 = new SingletonExample(),
+      s2 = new SingletonExample(),
+      component = new ComponentInfluencingSingleton();
+
+    s1.printValue(); // 1
+    s2.printValue(); // 1
+
+    s1.setValue(2);
+
+    s1.printValue(); // 2
+    s2.printValue(); // 2
+
+    s2.setValue(3);
+
+    s1.printValue(); // 3
+    s2.printValue(); // 3
+
+    console.log(s1 === s2); // true
+
+    component.changeSingletonValue(6);
+
+    s1.printValue(); // 6
+    s2.printValue(); // 6
+  }
+
+  $(document).ready(init);
+</pre>
+<script src="https://code.jquery.com/jquery-3.1.0.slim.min.js" integrity="sha256-cRpWjoSOw5KcyIOaZNo4i6fZ9tKPhYYb6i5T9RSVJG8=" crossorigin="anonymous"></script>
+<script src="./static/js/example1.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name=viewport content="width=device-width, initial-scale=1">
+  <title>Singleton w ES6</title>
+</head>
+<body>
+<h1>Mediator w ES6</h1>
+<p>
+  Poniżej przykład mediatora.
+</p>
+<pre>
+  class MediatorExample {
+    constructor() {
+
+      this.component1 = new Component1();
+      this.component2 = new Component2();
+
+      this.functionality1();
+      this.functionality2();
+      this.functionality3();
+    }
+
+    functionality1() {
+      this.component1.do1(() => {
+        this.component2.do2();
+      });
+    }
+
+    functionality2() {
+      this.component2.do2(() => {
+        this.component1.do1();
+      });
+    }
+
+    functionality3() {
+      this.component1.do1();
+      this.component2.do2();
+    }
+  }
+</pre>
+<script src="https://code.jquery.com/jquery-3.1.0.slim.min.js" integrity="sha256-cRpWjoSOw5KcyIOaZNo4i6fZ9tKPhYYb6i5T9RSVJG8=" crossorigin="anonymous"></script>
+<script src="./static/js/example2.js"></script>
+</body>
+</html>

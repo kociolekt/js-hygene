@@ -1,1 +1,2 @@
-# js-hygene
+# common-project-patterns
+Prezentacja o często używanych wzorcach projektowych
