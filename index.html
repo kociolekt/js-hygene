@@ -55,37 +55,751 @@
             </aside>
           </section>
         </section>
-        
+
+        <!-- PRZEPIS NA JAJECZNICĘ -->
         <section>
-          <!-- SLAJD TYTUŁOWY -->
           <section>
-            <h1>Higiena</h1>
-            <h2>pracy z js</h2>
-            <img src="https://pl.gravatar.com/userimage/96535938/f405f6eac9456fb4fe004bb989434528?size=200"/><br/>
-            <a href="https://kociolekt.github.io/common-project-patterns">prezentacja o wzorcach</a></br>
-            <a href="https://www.npmjs.com/~kociolekt">npm</a>, <a href="https://github.com/kociolekt">github</a>
+            <h2>Czysty kod</h2>
+            <img src="img/klin.jpg" alt="Klin" title="SO CLEAN!"/>
+            <aside class="notes">
+              Zacznijmy od czystego kodu. Z czym kojarzy się wam "czysty" kod? Jak trzeba pisac aby kod był "czysty".
+              Czytelnie to znaczy? Odpowiednie nazwy? Jedna metoda jedno przeznaczenie? Nie mieszać funkcjonalności komponentów?
+              Metoda max 20 linii? Klasa max 30 linii? Styl? Kod poprawny semantycznie i syntaktycznie i jednolita ilość spacji i średników itp?
+              Tak wszystko tak. Ale jest coś na co rzadko zwracamy uwagę lub nie wiemy jak to nazwać.
+              Sam przypomniałem sobie jak to się nazywa jak przygotowywałem się do tej prezentacji. CLIFFHANGER! Ale pokolei :)
+            </aside>
+          </section>
+          <section>
+            <h2>Przepis na jajecznicę</h2>
+            <ul>
+              <li>Rozpuścić masło na małej patelni</li>
+              <li>Wrzucić na stopione masełko szynkę pokrojoną w małe kwadraciki oraz drobno posiekany szczypiorek</li>
+              <li>rozbić ostrym nożem skorupki jajek i zawartość wylewać na patelnię</li>
+              <li>Dodać trochę soli oraz pieprzu i mieszać, aż do momentu ścięcia się jajek</li>
+            </ul>
+            <aside class="notes">
+              Standardowy przepis na jajecznice wygląda mniejwięcej tak:
+              ...
+              Jak wyglądałby kod dla takiego przepisu?
+            </aside>
+          </section>
+          <section>
+            <h2>Kod przepisu na jajecznicę</h2>
+            <p>Jak NIE powinien wyglądać kod tworzenia jajecznicy</p>
+<pre><code data-trim data-noescape>
+  dodaj(maslo)
+
+  while(maslo.nieJestStopione){
+    for( atom in atomyWProbceMasla){
+      atom.dostarczEnergii
+    }
+  }
+
+  dodaj(pokrojona Szynka)
+
+  while(szczypiorek.jestCaly){
+    oddziaływuj nożem na sieć krystaliczną szczypiorku
+  }
+
+  dodaj(szczypiorek)
+
+  noż.dodajEnerigiiPotencjalnej
+  noz.zamieńEnergięPotencjalnąNaKinetyczną
+  noż.uderzW(jajko)
+
+  dodaj(zawartośćJajka)
+
+  dodaj(sól)
+
+  for(ziarnkoPieprzu in szczyptaPipeprzu){
+    dodaj(ziarnkoPieprzu)
+  }
+
+  i mieszać, aż do momentu ścięcia się jajek
+</code></pre>
+            <aside class="notes">
+              Często wygląda tak:
+              ...
+              pomiędzy wywołaniami funkcji są pętle sięgające atomowego stopnia
+              szczegółowości. Ten przykład jest mały ale i tak ciężko się to czyta.
+              W takim razie jak powinien wyglądać kod przepisu na jajecznicę
+              o dobrym poziomie abstrakcji?
+            </aside>
           </section>
 
-          <!-- AGENDA -->
           <section>
-            <h2>Agenda</h2>
-            <ul>
-              <li>Czysty kod</li>
-              <li>Wzorce</li>
-              <li>Podejście komponentowe</li>
-              <li>Przykłady/Live Coding/Dyskusje</li>
-            </ul>
-
+            <h2>Kod przepisu na jajecznicę</h2>
+            <p>Jak powinien wyglądać kod tworzenia jajecznicy</p>
+<pre><code data-trim data-noescape>
+  patelnia.dodaj(maslo)
+  patelnia.podgrzejDoRostopieniaMasla()
+  patelnia.dodaj(pokroj(szynka))
+  patelnia.dodaj(pokroj(szczypiorek))
+  patelnia.dodaj(rozbij(jajko))
+  patelnia.dodaj(sól)
+  patelnia.dodaj(pieprz)
+  mieszajDoMomentuScieciaSieJajek(patelnia)
+</code></pre>
             <aside class="notes">
-              Bardzo dużo informacji o czystym kodzie, o wzorcach i o różnych podejściach do pisania UI znajdziedzie w internecie czy książkach.
-              Przedstawię wam takie najbardziej przydatne który MOIM ZDANIEM mają największy wpływ na każdy z wczesniej wymienionych tematów.
-              Dużo z tych imformacji będzie pewnie powtórzeniem (podobme szkolenie już było). Ale myślę że każdy też znajdzie w nim coś dla siebie.
-              Na koniec na tyle na ile nam czasu zostanie przedyskutujemy sobie kilka przypadków podczas pisania których często pojawiają się
-              znaki zapytania. Ale to nie znaczy że nie macie się odzywać przy pierwszych dwóch tematach. Wręcz przeciwnie, chciałbym zachęcić was do 
-              aktywnego udziału przez CAŁE DWIE GODZINY!
+              Mniejwięcej tak. Wszystkie składowe przepisu są podzielone na
+              metody które kolejno wykonywane są na odpowiednich obiektach.
+              Mając taki kod przed sobą odrazu widać co on robi.
+              Każda linijka jest wywołaniem na tym samym poziomie abstrakcji.
+            </aside>
+          </section>
+          <section>
+            <h2>Poziomy abstrakcji</h2>
+            <p>Dodatkowy czinnik wpływający na jakość kodu.</p>
+<pre><code data-trim data-noescape>
+initUi() {
+  this.initEvaluationInfo();
+  this.initCostSummary();
+  this.initEvaluationVariant();
+  this.initCosts();
+  this.initTemplateSelect();
+  this.initDuplicateForm();
+  this.initShortcuts();
+  this.initHelpMessage();
+  this.initStartProject();
+}
+</code></pre>
+            <aside class="notes">
+              Czyli poziomy abstkacji. Tutaj przykład. Na podstawie tego fragmetnu wiem że
+              Inicjalizowane jest UI a w tym informacje o wycenie, podsumowanie kosztów, wariant wyceny,
+              koszty, wybierak templatek, formularz duplikowania, skróty, jakieś wiadomości pomocnicze
+              i coś o rozpoczęciu projektu. Inicjalizowanie czyli pewnie wykonuje się na początku przy starcie
+              strony. 
+              
+              Z tego miejsca od razu wiadomo gdzie czegoś szukać. Jeżeli mam zmienić coś związanego
+              z wybierakiem to pewnie znajdę to w initTemplateSelect.
+
+              Dlaczego przedrostek init? Żeby odróżnić metodę wykonywaną na początku od pozostałych
+              takich jak handlery, settery, gettery, processingi itp itd
+
+              Tak to fragment toolboxa :)
+
+              No dobrze ale jak zorganizować kod w taki sposób aby można było zapisać go linijka pod linijką.
+              Wiem że powinno się tak robić ale nie wychodzi.
+              Co robić? Jak żyć?
+              Z pomocą przychodzą wzorce.
             </aside>
           </section>
         </section>
+
+
+        <!-- SINGLETON -->
+        <section>
+          <section>
+            <h2>Wzorce</h2>
+            <img src="img/wzorce.jpg" alt="Krata" title="Dlaczego informatycy lubią chodzić w koszulach w kratę?\n - Bo mają wzorce">
+          </section>
+          <section>
+            <h2>Singleton</h2>
+            <p>Kreacyjny wzorzec projektowy, którego celem jest ograniczenie możliwości tworzenia obiektów danej klasy do jednej instancji oraz zapewnienie globalnego dostępu do stworzonego obiektu.</p>
+            <ul>
+              <li>Singleton boilerplate</li>
+              <li>Przykładowa implementacja</li>
+              <li>Przykład zastosowania</li>
+            </ul>
+            <aside class="notes">
+              Tak mówią. Co to oznacza w praktyce? Oznacza to że z każdego miejsca
+              gdzie można importować moduł z Singletonem, mamy dostęp do tego samego obiektu.
+              Singleton blokuje możliwość tworzenia więcej jak jednej instancji
+              danej klasy. Nawet jeżeli wykonamy new Klasa kilka razy to za każdym
+              razem wyrażenie to zwróci nam jeden i ten sam obiekt.
+            </aside>
+          </section>
+            <section>
+              <h2>Singleton boilerplate</h2>
+              <p>Czysty singleton w ES6.</p>
+              <pre><code data-trim data-noescape>
+  class EmptySingleton {
+    constructor() {
+      if(EmptySingleton.singletonInstance) {
+        return EmptySingleton.singletonInstance;
+      }
+  
+      EmptySingleton.singletonInstance = this;
+  
+      // TOTO: Zaimplementuj mnie ;)
+    }
+  }
+              </code></pre>
+              <aside class="notes">
+                Przykład implementacji czystego Singletona w ES6. Klasa z konstruktorem
+                który zawiera warunek sprawdzający czy instancja juz istnieje.
+                Jeżeli istnieje to zwraca istniejącą instancję.
+                Jezeli nie istnieje to konstruktor zwraca nową instancję.
+              </aside>
+            </section>
+            <section>
+              <h2>Przykładowa implementacja</h2>
+              <p>Implementacja singletona z polami, metodami itp. - <a href="examples/singleton.html" target="_blank">zobacz przykład</a>.</p>
+  <pre><code data-trim data-noescape>
+  class SingletonExample {
+    constructor() {
+      if(SingletonExample.singletonInstance) {
+        return SingletonExample.singletonInstance;
+      }
+  
+      SingletonExample.singletonInstance = this;
+  
+      this.value = 1; // Dodatkowe pole
+    }
+  
+    // Kilka metod
+    setValue(newValue) {
+      this.value = newValue;
+    }
+  
+    getValue() {
+      return this.value;
+    }
+  
+    printValue() {
+      console.log(this.value);
+    }
+  }
+  </code></pre>
+              <aside class="notes">
+                Tak przygotowaną klasę możemy rozwijać dopisując pola, metody itp.
+                Pozatym że w efekcie pracujemy zawsze na tej samej instancji
+                to klasa ta niczym się nie różni od innych klas.
+              </aside>
+            </section>
+            <section>
+              <h2>Przykład zastosowania</h2>
+              <p>Klasa Settings z Toolboxa</p>
+  <pre><code data-trim data-noescape>
+  let defaults = {
+    projectListFilter: false,
+    clientListFilter: false
+  };
+  
+  export default class Settings {
+    constructor() {
+      if(Settings.singletonInstance) {
+        return Settings.singletonInstance;
+      }
+  
+      Settings.singletonInstance = this;
+  
+      this.load();
+    }
+  
+    load() {
+      this.settings = Object.assign({}, defaults, JSON.parse(localStorage.getItem('settings')));
+    }
+  
+    save() {
+      localStorage.setItem('settings', JSON.stringify(this.settings));
+    }
+  
+    option(key, value) {
+      if(value != null){
+        this.settings[key] = value;
+        this.save();
+      }
+      return this.settings[key];
+    }
+  
+  }
+  </code></pre>
+              <aside class="notes">
+                Najlepszym przykładem który przychodzi mi do głowy są globalne
+                ustawienia na przestrzeni całego serwisu. Przykładowa klasa - już nie koniecznie
+                najlepsza może wyglądać tak jak napisałem tutaj - przykład zaczerpnięty z tooolboxa.
+                Singleton Settings który potrafi ładować i zapisywać dane w localStorage oraz
+                odczytywać i nadpisywać ich wartości.
+                Singleton wykorzystany w tym wypadku ograniczył ładowanie ustawień z
+                local storage do jednego razy na przeładowanie bez różnicy w ilu miejscach
+                obiekt ten jest wywoływany (new Settings). Dodatkowo w pamięci istnieje
+                tylko jedna tablica klucz - wartość zawierająca ustawienia.
+                W takim razie czy powinnśmy używać Singletona do wszystkiego skoro jest taki fajny?
+                Nie. W sytuacji w której zależy nam na wielu instancjach obiektu -
+                przykładowo chcemy mieć wiele kwadratów - Singleton uniemożliwia pracę.
+              </aside>
+            </section>
+          </section>
+  
+          <!-- MEDIATOR -->
+          <section>
+            <section>
+              <h2>Mediator</h2>
+              <p>Wzorzec mediatora umożliwia zmniejszenie liczby powiązań między różnymi klasami, poprzez utworzenie mediatora będącego jedyną klasą, która dokładnie zna metody wszystkich innych klas, którymi zarządza. Nie muszą one nic o sobie wiedzieć, jedynie przekazują polecenia mediatorowi, a ten rozsyła je do odpowiednich obiektów.</p>
+              <ul>
+                <li>Mediator boilerplate</li>
+                <li>Przykładowa implementacja</li>
+                <li>Przykład zastosowania</li>
+              </ul>
+              <aside class="notes">
+                Definicja mówi o mediatorze jako o klasie która zna metody wszystkich
+                składowych elementów, a elementy nie wykonują na sobie bezpośrednich
+                akcji - robią to przez mediatora.
+                To mediator wie jak powinna wyglądać logika połączeń/zależności
+                pomiędzy elementami systemu. Ułatwia to pisanie i zrozumienie tej
+                logiki a jednocześnie pozwala zachować czysty kod po stronie
+                elementów.
+              </aside>
+            </section>
+            <section>
+              <h2>Mediator boilerplate</h2>
+              <p>Jak zaimplementować mediator</p>
+  <pre><code data-trim data-noescape>
+    class EmptyMediator {
+      constructor() {
+  
+      }
+    }
+  </code></pre>
+              <aside class="notes">
+                Jak zaimplementować mediator? O tak. Nie jest to nic innego jak
+                Klasa. Spotkałem też inne implementacje które umożliwiały tworzenie
+                kanałów komunikacji na których komponenty systemu miałyby ze sobą
+                rozmawiać. Ale wydaje mi się że tamte implementacje są bardziej
+                sformalizowane i lepiej pasują do wzorca Publish–subscribe.
+                Mediator natomiast jest bardziej umownym wzorcem. Pisząc mediator
+                piszemy klasę w określony sposób. Dobrze jest wiedzieć wczesniej
+                jakie elementy będą komunikować się ze sobą w ramach mediatora i
+                co mają przez to osiągnąć.
+              </aside>
+            </section>
+            <section>
+              <h2>Przykładowa implementacja</h2>
+              <p>Przykładowy mediator - <a href="examples/mediator.html" target="_blank">zobacz przykład</a>.</p>
+  <pre><code data-trim data-noescape>
+    import Component1 from '../components/component1';
+    import Component2 from '../components/component2';
+  
+    class MediatorExample {
+      constructor() {
+  
+        this.component1 = new Component1();
+        this.component2 = new Component2();
+  
+        this.functionality1();
+        this.functionality2();
+        this.functionality3();
+      }
+  
+      functionality1() {
+        this.component1.do1(() => {
+          this.component2.do2();
+        });
+      }
+  
+      functionality2() {
+        this.component2.do2(() => {
+          this.component1.do1();
+        });
+      }
+  
+      functionality3() {
+        this.component1.do1();
+        this.component2.do2();
+      }
+    }
+  </code></pre>
+              <aside class="notes">
+                Przykładowy mediator może wyglądać w ten sposób. Jest klasa która
+                spina komponenty w funkcjonalności. Component1 nie wie o istnieniu
+                Component2 i odwrotnie Component2 nie wie o istnieniu Component1. Są
+                zamknięte we własnych sprawach robiąc to co do nich należy. Mediator
+                mówi w jakich sytuacjach który z komponentów co powinien zrobić.
+              </aside>
+            </section>
+            <section>
+              <h2>Przykład zastosowania</h2>
+              <p>Klasa EstimationEdit z Toolboxa</p>
+  <pre><code data-trim data-noescape>
+  import Service from 'common/js/service';
+  import EstimationInfo from 'src/js/widgets/estimationInfo';
+  import SummaryCosts from 'src/js/widgets/summaryCosts';
+  import EvaluationVariant from 'src/js/widgets/evaluationVariant';
+  import Costs from 'src/js/widgets/costs';
+  import ClientProjectSelector from 'common/js/components/clientProjectSelector';
+  import ModalForm from 'common/js/components/modalForm';
+  import AvailableActions from 'common/shared/available-actions/availableActions';
+  import YesNoModalBox from 'common/js/components/yesNoModalBox';
+  import {toastrInfo} from 'common/js/plugins/toastr';
+  import {sweetAlertWarning} from 'common/js/plugins/sweetalert';
+  
+  let $ = window.jQuery; // global import;
+  
+  class EstimationEdit extends Service {
+    constructor($context, options = {}) {
+      super(options);
+  
+      this.$context = $context;
+      this.$form = this.$context.find('form');
+  
+      this.estimationInfo = null;
+      this.summaryCosts = null;
+      this.evaluationVariant = null;
+      this.costs = null;
+      this.shortcuts = null;
+  
+      this.stage = this.$context.attr('data-stage');
+  
+      this.changed = false;
+  
+      this.initUi();
+    }
+  
+    initUi() {
+      this.initEvaluationInfo();
+      this.initCostSummary();
+      this.initEvaluationVariant();
+      this.initCosts();
+      this.initTemplateSelect();
+      this.initDuplicateForm();
+      this.initShortcuts();
+      this.initHelpMessage();
+      this.initStartProject();
+    }
+  
+    initShortcuts() {
+      let $shortcuts = $(document.getElementById('estimationActions')).find('.js-available-actions');
+      if ($shortcuts.length === 1) {
+        this.shortcuts = new AvailableActions($shortcuts);
+        new YesNoModalBox($shortcuts.find('.available-actions__button__delete-btn'), {
+          title: 'Czy jesteś pewien?',
+          text: 'Odzyskanie elementu nie będzie możliwe!!!'
+        });
+        new YesNoModalBox($shortcuts.find('.available-actions__button__back-btn'), {
+          title: 'Czy jesteś pewien, że chcesz opuścić stronę?'
+        });
+        let save = new YesNoModalBox($shortcuts.find('.available-actions__button__submit-btn'), {
+          title: 'Czy jesteś pewien?',
+          text: 'Czy chcesz zapisać?',
+          action: 'event'
+        });
+        save.on('afterYesClick', () => {
+          this.$form.trigger('submit');
+        });
+      }
+    }
+  
+    initEvaluationInfo() {
+      let $estimationInfo = $(document.getElementById('estimationInfo'));
+      if($estimationInfo.length > 0) {
+        this.estimationInfo = new EstimationInfo($estimationInfo);
+      }
+    }
+  
+    initCostSummary() {
+      this.summaryCosts = new SummaryCosts($(document.getElementById('costSummary')));
+    }
+  
+    initEvaluationVariant() {
+      this.evaluationVariant = new EvaluationVariant($(document.getElementById('variants')));
+      this.evaluationVariant.on('overheadchange', () => {
+        this.costs.setOverhead(this.evaluationVariant.getOverhead());
+        this.costs.recalculateAll();
+        this.changed = true;
+      });
+    }
+  
+    initCosts() {
+      this.costs = new Costs($(document.getElementById('costs')), {
+        stage: this.stage
+      });
+      this.costs.on('change', (event) => {
+        this.summaryCosts.updateSummaryCosts(event.target.internalCost, event.target.externalCost);
+        this.evaluationVariant.setCosts(event.target.internalCost, event.target.externalCost);
+        if(this.estimationInfo !== null) {
+          this.estimationInfo.setHours(event.target.hours);
+        }
+        this.changed = true;
+      });
+      this.costs.setOverhead(this.evaluationVariant.getOverhead());
+      this.costs.recalculateAll();
+    }
+  
+    initTemplateSelect() {
+      //TODO: Zamknąć ten modal i komunikat zamkniecia w oddzielnym module (SensitiveContent?)
+      // Wysylanie templateow
+      let $templateChangeModal = $(document.getElementById('templateChangeModal')),
+        $templateSelect = $(document.getElementById('templateId'));
+  
+      $templateChangeModal.find('[data-dismiss="modal"]').off().on('click', () => {
+        $templateSelect.val('');
+      });
+  
+      $templateChangeModal.find('.btn-primary').off().on('click', () => {
+        this.changeTemplate();
+      });
+  
+      $templateSelect.on('change', () => {
+        let value = $templateSelect.val();
+        if(typeof value !== 'undefined' && value !== '') {
+  
+          if(this.changed) {
+            //$templateChangeModal.modal('show');
+            sweetAlertWarning({
+              title: 'Zamierzasz zmienić szablon wyceny.',
+              text: 'Utracisz wszystkie niezapisane w kosztorysie informacje. Kontynuować?'
+            },
+            (isConfirm) => {
+              if (isConfirm) {
+                this.changeTemplate();
+              }
+            });
+          }
+        }
+      });
+    }
+  
+    changeTemplate() {
+      this.$form.trigger('submit');
+    }
+  
+    initDuplicateForm() {
+      let $duplicateEstimation =
+        $(document.getElementById('duplicateEstimation'));
+      this.duplicateEstimationForm = new ModalForm($duplicateEstimation);
+      this.duplicateEstimationForm.on('afterLoad', ()=> {
+        new ClientProjectSelector();
+      });
+    }
+  
+    initHelpMessage() {
+      if(this.stage === 'typeUnsaved' || this.stage === 'typeDraft') {
+        toastrInfo(`W formularzu wyceny możesz stworzyć kosztorys
+          mający 4 zagłębienia. Pierwsze to etap, który po uruchomieniu
+          projektu będzie posiadał daty. Pozostałe to zadania,
+          które posiadają koszt.`, undefined, {
+          timeOut: 30000
+        });
+      } else if(this.stage === 'typeActive') {
+        // TODO: sprawdzić czy wszystkie daty są wypełnione i wyświetlić
+        // odpowieni komunikat
+      }
+    }
+  
+    initStartProject() {
+      if (window.K2.estimation.status_change === 1) {
+        toastrInfo(`Podaj daty wszystkich etapów oraz daty wystąpienia kosztów zewnętrznych. Po zapisaniu wyceny status
+          projektu zostanie zmieniony na "W produkcji". Projekt zostanie uruchomiony.`, undefined, {
+          timeOut: 30000
+        });
+      }
+    }
+  }
+  
+  module.exports = EstimationEdit;
+  
+  </code></pre>
+              <aside class="notes">
+                Przykład zastosowania mediatora wzięty z Toolboxa. Biorąc pod uwagę wcześniej
+                wspomniane poziomy abstrakcji EstimationEdit jest stroną (Page).
+                Zgodnie z definicją Mediatora łączy ze sobą hermetyczne komponenty
+                realizując pewne funkcjonalności. Dla ułatwienia zamykam każdą funkcjonalność
+                w oddzielną metodę chociaż nie jest to regułą. Z jednej strony
+                to nic nadzwyczajnego - klasa z metodami. Ale jak skrupulatnie
+                przestrzega się zasady łączenia komponentów poprzez mediatora
+                to nagle zauważa się że komponenty są przenaszalne a logikę można
+                łatwo poprawić/zmienić.
+                Jeszcze tak propos ilości linii w klasie - ta klasa równierz mieści
+                się w tym wymaganiu.
+              </aside>
+            </section>
+          </section>
+  
+          <!-- OBSERWATOR -->
+          <section>
+            <section>
+              <h2>Obserwator</h2>
+              <p>Wwzorzec projektowy należący do grupy wzorców czynnościowych. Używany jest do powiadamiania zainteresowanych obiektów o zmianie stanu pewnego innego obiektu.</p>
+              <ul>
+                <li>Dlaczego Obserwator</li>
+                <li>Obserwator boilerplate</li>
+                <li>Przykładowa implementacja</li>
+                <li>Przykład zastosowania</li>
+              </ul>
+              <aside class="notes">
+                Obserwator, Reactor, Dispatcher, Eventer, EventEmitter to są różne
+                nazwy koncepcji o której chciałbym opowiedzieć. Wszystkie różną się
+                implementacją ale idea pozostaje taka sama.
+              </aside>
+            </section>
+            <section>
+              <h2>Dlaczego Obserwator</h2>
+              <ul>
+                <li>Luźne powiązania</li>
+                <li>Komunikacja z klasą nadrzędną</li>
+              </ul>
+  <pre><code data-trim data-noescape>
+  class Mediator {
+    constructor() {
+  
+      this.functionality1();
+    }
+  
+    functionality1() {
+      let componentPopup = new ComponentPopup();
+      let componentTimeout = new ComponentTimeout();
+  
+      componentPopup.showPopup('ten popup NIE jest po timeoutcie');
+      // Co jeśli componentTimeout wykonuje się asynchronicznie a my chcemy
+      // poinformować o sukcesie za pomocą componentPopup? Fajnie by było wpiąć się
+      // w callbacka ale nie możemy tego zrobić bezpośrednio w componentTimeout
+    }
+  }
+  </code></pre>
+              <aside class="notes">
+                Dlaczego Obserwator? Mając mediator z jednej strony rozwiązujemy
+                problem bałaganu i ograniczamy błędy logiczne, a z drugiej strony
+                wiążemy sobie ręce ponieważ nie powinniśmy komunikować się
+                bezpośrednio między componentami. Tak jak napisałem tutaj w
+                komentarzu. Co jeśili jeden z komponentów wykonuje asynchroniczne
+                akcje na które musimy zareagować? Tutaj musimy użyć obserwatora.
+              </aside>
+            </section>
+            <section>
+              <h2>Obserwator boilerplate</h2>
+              <p>Implementacja obserwatora za pomocą eventów. <a href="https://www.npmjs.com/package/simple-eventer" target="_blank">SimpleEventer</a></p>
+  <pre><code data-trim data-noescape>
+  class ComponentTimeout extends SimpleEventer {
+    constructor() {
+      super();
+  
+    }
+  }
+  
+  // component1.on(...) po stronie obserwatora
+  </code></pre>
+              <aside class="notes">
+                Polecam implementacje obserwatora opartą o eventy ponieważ jest
+                bardzo elastyczna - nie musimy myśleć w którym momencie komunikować
+                się z mediatorem. Poprostu jeżeli potrzeba to mediator podpina
+                listenera pod komponent i reaguje w określony sposób na jego zmiany.
+                Dodatkowo jeżeli chcemy wykorzystać component w innym miejscu to
+                możemy.
+                Implementacja polega na definicji komponentu tak aby mógł propagować
+                eventy. W tym wypadku użyłem klasy z npm SimpleEventer ale można
+                użyć dowolnego sposobu implementacji. Klasa SimpleEventer umożliwia
+                uruchomienie eventu poprzez metodę fire i podpięcie listenera za
+                pomocą metody on.
+              </aside>
+            </section>
+            <section>
+              <h2>Przykładowa implementacja</h2>
+              <p>Przykładowy obserwator - <a href="examples/observer.html" target="_blank">zobacz przykład</a>.</p>
+  <pre><code data-trim data-noescape>
+  class ComponentTimeout extends SimpleEventer {
+    constructor() {
+      super();
+  
+      this.initTimeout();
+    }
+  
+    initTimeout() {
+      setTimeout(() => {
+        this.fire('afterTimeout');
+      }, 2000);
+    }
+  }
+  
+  class Mediator {
+    constructor() {
+  
+    this.componentPopup = new ComponentPopup();
+    this.componentTimeout = new ComponentTimeout();
+  
+    this.functionality1();
+  }
+  
+    functionality1() {
+      this.componentTimeout.on('afterTimeout', () => {
+        this.componentPopup.showPopup('po timeoutce'); // po timeoutce
+      });
+    }
+  }
+  </code></pre>
+              <aside class="notes">
+                Przykładowy sposób wykorzystania wzorca obserwatora. W tym wypadku
+                Mediator staje się jednocześnie obserwatorem componentów.
+                Obserwuje componentTimeout i reaguje na zmianę za pomocą
+                componentPopup wyświetlając odpowiedni komunikat. W połączeniu oba
+                wzorce dają możliwość elastycznego łączenia ze sobą komponentów
+                w relacji wiele do wielu nie ingerując w logikę samych komponentów.
+                Co więcej logikę zależności można napisać w ramach klasy i w razie
+                potrzeby podzielić ją na metody.
+              </aside>
+            </section>
+            <section>
+              <h2>Przykład zastosowania</h2>
+              <p>Klasa EstimationEdit z Toolboxa</p>
+  <pre><code data-trim data-noescape>
+  
+  class EstimationEdit extends Service {
+    constructor($context, options = {}) {
+      (...)
+    }
+  
+    initUi() {
+      this.initEvaluationInfo();
+      this.initCostSummary();
+      this.initEvaluationVariant();
+      this.initCosts();
+      (...)
+    }
+  
+  
+    initEvaluationInfo() {
+      let $estimationInfo = $(document.getElementById('estimationInfo'));
+      if($estimationInfo.length > 0) {
+        this.estimationInfo = new EstimationInfo($estimationInfo);
+      }
+    }
+  
+    initCostSummary() {
+      this.summaryCosts = new SummaryCosts($(document.getElementById('costSummary')));
+    }
+  
+    initEvaluationVariant() {
+    this.evaluationVariant = new EvaluationVariant($(document.getElementById('variants')));
+      this.evaluationVariant.on('overheadchange', () => {
+        this.costs.setOverhead(this.evaluationVariant.getOverhead());
+        this.costs.recalculateAll();
+        this.changed = true;
+      });
+    }
+  
+    initCosts() {
+      // Costs też jest mediatorem
+      this.costs = new Costs($(document.getElementById('costs')), {
+        stage: this.stage
+      });
+      this.costs.on('change', (event) => {
+        this.summaryCosts.updateSummaryCosts(event.target.internalCost, event.target.externalCost);
+        this.evaluationVariant.setCosts(event.target.internalCost, event.target.externalCost);
+        if(this.estimationInfo !== null) {
+          this.estimationInfo.setHours(event.target.hours);
+        }
+        this.changed = true;
+      });
+      this.costs.setOverhead(this.evaluationVariant.getOverhead());
+      this.costs.recalculateAll();
+    }
+    (...)
+  }
+  
+  </code></pre>
+              <aside class="notes">
+                W przypadku dużej ilości komponentów możliwe jest równierz
+                utworzenie drzewiastej struktury Mediatorów gdzie mediator1 może
+                być obserwatorem mediatora2. Tak jest w przypadku wcześniej już
+                pokazanej klasy EstimationEdit z toolboxa.
+                Klasa ta reaguje na zmiany w komponentach i propaguje je na inne
+                komponenty z których Costs jest Mediatorem dla grupy innych
+                komponentów.
+              </aside>
+            </section>
+          </section>
+
+
       </div>
     </div>
 
