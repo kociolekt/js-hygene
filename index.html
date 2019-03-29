@@ -187,159 +187,66 @@ initUi() {
         </section>
 
 
-        <!-- SINGLETON -->
+        <!-- WZORCE -->
         <section>
           <section>
             <h2>Wzorce</h2>
-            <img src="img/wzorce.jpg" alt="Krata" title="Dlaczego informatycy lubią chodzić w koszulach w kratę?\n - Bo mają wzorce">
+            <img src="img/wzorce.jpg" alt="Krata" title="Dlaczego informatycy lubią chodzić w koszulach w kratę? - Bo mają wzorce!">
+            <aside class="notes">
+              Wzorce mają wiele różnych definicji. dla nas na ten moment wystarczy pamiętać że wzorzec to nie jest biblioteka
+              czy jakaś nowa część języka. Wzorzec to inaczej sposób w jaki piszemy kod.
+              Oczywiście nie będziemy omawiać wszystkich! Ale zauważyłem że trzy w zupełności wystarczają przy naszej codziennej pracy.
+              Z czego dwa z nich używa się w olbrzymiej większości przypadków. Mowa o Singletonie, Mediatorze i Obserwatorze.
+            </aside>
           </section>
+
+
           <section>
             <h2>Singleton</h2>
             <p>Kreacyjny wzorzec projektowy, którego celem jest ograniczenie możliwości tworzenia obiektów danej klasy do jednej instancji oraz zapewnienie globalnego dostępu do stworzonego obiektu.</p>
-            <ul>
-              <li>Singleton boilerplate</li>
-              <li>Przykładowa implementacja</li>
-              <li>Przykład zastosowania</li>
-            </ul>
             <aside class="notes">
-              Tak mówią. Co to oznacza w praktyce? Oznacza to że z każdego miejsca
-              gdzie można importować moduł z Singletonem, mamy dostęp do tego samego obiektu.
-              Singleton blokuje możliwość tworzenia więcej jak jednej instancji
-              danej klasy. Nawet jeżeli wykonamy new Klasa kilka razy to za każdym
-              razem wyrażenie to zwróci nam jeden i ten sam obiekt.
+              Zacznimy od tego najrzadziej używanego. Od Singletona.
+              Tutaj jest definicja. Z punktu widzenia praktycznego Singleton
+              potrafi być jeden i tylko jeden. Nawet jak wilokrotnie będziemy próbowali
+              utworzyć go od nowa, to nadal będzie jeden i ten sam obiekt.
             </aside>
           </section>
             <section>
               <h2>Singleton boilerplate</h2>
-              <p>Czysty singleton w ES6.</p>
               <pre><code data-trim data-noescape>
-  class EmptySingleton {
-    constructor() {
-      if(EmptySingleton.singletonInstance) {
-        return EmptySingleton.singletonInstance;
-      }
-  
-      EmptySingleton.singletonInstance = this;
-  
-      // TOTO: Zaimplementuj mnie ;)
+class EmptySingleton {
+  constructor() {
+    if(EmptySingleton.singletonInstance) {
+      return EmptySingleton.singletonInstance;
     }
+
+    EmptySingleton.singletonInstance = this;
+
+    // TOTO: Zaimplementuj mnie ;)
   }
+}
               </code></pre>
               <aside class="notes">
-                Przykład implementacji czystego Singletona w ES6. Klasa z konstruktorem
+                Przykład implementacji czystego Singletona. Klasa z konstruktorem
                 który zawiera warunek sprawdzający czy instancja juz istnieje.
                 Jeżeli istnieje to zwraca istniejącą instancję.
                 Jezeli nie istnieje to konstruktor zwraca nową instancję.
+                Później zobaczymy jak można przykładowo wykorzystać Singleton.
+                Tymczasem.
               </aside>
             </section>
-            <section>
-              <h2>Przykładowa implementacja</h2>
-              <p>Implementacja singletona z polami, metodami itp. - <a href="examples/singleton.html" target="_blank">zobacz przykład</a>.</p>
-  <pre><code data-trim data-noescape>
-  class SingletonExample {
-    constructor() {
-      if(SingletonExample.singletonInstance) {
-        return SingletonExample.singletonInstance;
-      }
-  
-      SingletonExample.singletonInstance = this;
-  
-      this.value = 1; // Dodatkowe pole
-    }
-  
-    // Kilka metod
-    setValue(newValue) {
-      this.value = newValue;
-    }
-  
-    getValue() {
-      return this.value;
-    }
-  
-    printValue() {
-      console.log(this.value);
-    }
-  }
-  </code></pre>
-              <aside class="notes">
-                Tak przygotowaną klasę możemy rozwijać dopisując pola, metody itp.
-                Pozatym że w efekcie pracujemy zawsze na tej samej instancji
-                to klasa ta niczym się nie różni od innych klas.
-              </aside>
-            </section>
-            <section>
-              <h2>Przykład zastosowania</h2>
-              <p>Klasa Settings z Toolboxa</p>
-  <pre><code data-trim data-noescape>
-  let defaults = {
-    projectListFilter: false,
-    clientListFilter: false
-  };
-  
-  export default class Settings {
-    constructor() {
-      if(Settings.singletonInstance) {
-        return Settings.singletonInstance;
-      }
-  
-      Settings.singletonInstance = this;
-  
-      this.load();
-    }
-  
-    load() {
-      this.settings = Object.assign({}, defaults, JSON.parse(localStorage.getItem('settings')));
-    }
-  
-    save() {
-      localStorage.setItem('settings', JSON.stringify(this.settings));
-    }
-  
-    option(key, value) {
-      if(value != null){
-        this.settings[key] = value;
-        this.save();
-      }
-      return this.settings[key];
-    }
-  
-  }
-  </code></pre>
-              <aside class="notes">
-                Najlepszym przykładem który przychodzi mi do głowy są globalne
-                ustawienia na przestrzeni całego serwisu. Przykładowa klasa - już nie koniecznie
-                najlepsza może wyglądać tak jak napisałem tutaj - przykład zaczerpnięty z tooolboxa.
-                Singleton Settings który potrafi ładować i zapisywać dane w localStorage oraz
-                odczytywać i nadpisywać ich wartości.
-                Singleton wykorzystany w tym wypadku ograniczył ładowanie ustawień z
-                local storage do jednego razy na przeładowanie bez różnicy w ilu miejscach
-                obiekt ten jest wywoływany (new Settings). Dodatkowo w pamięci istnieje
-                tylko jedna tablica klucz - wartość zawierająca ustawienia.
-                W takim razie czy powinnśmy używać Singletona do wszystkiego skoro jest taki fajny?
-                Nie. W sytuacji w której zależy nam na wielu instancjach obiektu -
-                przykładowo chcemy mieć wiele kwadratów - Singleton uniemożliwia pracę.
-              </aside>
-            </section>
-          </section>
-  
-          <!-- MEDIATOR -->
-          <section>
+
+
             <section>
               <h2>Mediator</h2>
               <p>Wzorzec mediatora umożliwia zmniejszenie liczby powiązań między różnymi klasami, poprzez utworzenie mediatora będącego jedyną klasą, która dokładnie zna metody wszystkich innych klas, którymi zarządza. Nie muszą one nic o sobie wiedzieć, jedynie przekazują polecenia mediatorowi, a ten rozsyła je do odpowiednich obiektów.</p>
-              <ul>
-                <li>Mediator boilerplate</li>
-                <li>Przykładowa implementacja</li>
-                <li>Przykład zastosowania</li>
-              </ul>
               <aside class="notes">
                 Definicja mówi o mediatorze jako o klasie która zna metody wszystkich
-                składowych elementów, a elementy nie wykonują na sobie bezpośrednich
-                akcji - robią to przez mediatora.
+                swoich dzieci, a dzieci kominikują się ze sobą tylko poprzez mediatora.
                 To mediator wie jak powinna wyglądać logika połączeń/zależności
                 pomiędzy elementami systemu. Ułatwia to pisanie i zrozumienie tej
                 logiki a jednocześnie pozwala zachować czysty kod po stronie
-                elementów.
+                dzieci.
               </aside>
             </section>
             <section>
@@ -362,298 +269,18 @@ initUi() {
                 piszemy klasę w określony sposób. Dobrze jest wiedzieć wczesniej
                 jakie elementy będą komunikować się ze sobą w ramach mediatora i
                 co mają przez to osiągnąć.
+                Później zobaczymy jak można przykładowo wykorzystać Mediator.
+                Tymczasem.
               </aside>
             </section>
-            <section>
-              <h2>Przykładowa implementacja</h2>
-              <p>Przykładowy mediator - <a href="examples/mediator.html" target="_blank">zobacz przykład</a>.</p>
-  <pre><code data-trim data-noescape>
-    import Component1 from '../components/component1';
-    import Component2 from '../components/component2';
-  
-    class MediatorExample {
-      constructor() {
-  
-        this.component1 = new Component1();
-        this.component2 = new Component2();
-  
-        this.functionality1();
-        this.functionality2();
-        this.functionality3();
-      }
-  
-      functionality1() {
-        this.component1.do1(() => {
-          this.component2.do2();
-        });
-      }
-  
-      functionality2() {
-        this.component2.do2(() => {
-          this.component1.do1();
-        });
-      }
-  
-      functionality3() {
-        this.component1.do1();
-        this.component2.do2();
-      }
-    }
-  </code></pre>
-              <aside class="notes">
-                Przykładowy mediator może wyglądać w ten sposób. Jest klasa która
-                spina komponenty w funkcjonalności. Component1 nie wie o istnieniu
-                Component2 i odwrotnie Component2 nie wie o istnieniu Component1. Są
-                zamknięte we własnych sprawach robiąc to co do nich należy. Mediator
-                mówi w jakich sytuacjach który z komponentów co powinien zrobić.
-              </aside>
-            </section>
-            <section>
-              <h2>Przykład zastosowania</h2>
-              <p>Klasa EstimationEdit z Toolboxa</p>
-  <pre><code data-trim data-noescape>
-  import Service from 'common/js/service';
-  import EstimationInfo from 'src/js/widgets/estimationInfo';
-  import SummaryCosts from 'src/js/widgets/summaryCosts';
-  import EvaluationVariant from 'src/js/widgets/evaluationVariant';
-  import Costs from 'src/js/widgets/costs';
-  import ClientProjectSelector from 'common/js/components/clientProjectSelector';
-  import ModalForm from 'common/js/components/modalForm';
-  import AvailableActions from 'common/shared/available-actions/availableActions';
-  import YesNoModalBox from 'common/js/components/yesNoModalBox';
-  import {toastrInfo} from 'common/js/plugins/toastr';
-  import {sweetAlertWarning} from 'common/js/plugins/sweetalert';
-  
-  let $ = window.jQuery; // global import;
-  
-  class EstimationEdit extends Service {
-    constructor($context, options = {}) {
-      super(options);
-  
-      this.$context = $context;
-      this.$form = this.$context.find('form');
-  
-      this.estimationInfo = null;
-      this.summaryCosts = null;
-      this.evaluationVariant = null;
-      this.costs = null;
-      this.shortcuts = null;
-  
-      this.stage = this.$context.attr('data-stage');
-  
-      this.changed = false;
-  
-      this.initUi();
-    }
-  
-    initUi() {
-      this.initEvaluationInfo();
-      this.initCostSummary();
-      this.initEvaluationVariant();
-      this.initCosts();
-      this.initTemplateSelect();
-      this.initDuplicateForm();
-      this.initShortcuts();
-      this.initHelpMessage();
-      this.initStartProject();
-    }
-  
-    initShortcuts() {
-      let $shortcuts = $(document.getElementById('estimationActions')).find('.js-available-actions');
-      if ($shortcuts.length === 1) {
-        this.shortcuts = new AvailableActions($shortcuts);
-        new YesNoModalBox($shortcuts.find('.available-actions__button__delete-btn'), {
-          title: 'Czy jesteś pewien?',
-          text: 'Odzyskanie elementu nie będzie możliwe!!!'
-        });
-        new YesNoModalBox($shortcuts.find('.available-actions__button__back-btn'), {
-          title: 'Czy jesteś pewien, że chcesz opuścić stronę?'
-        });
-        let save = new YesNoModalBox($shortcuts.find('.available-actions__button__submit-btn'), {
-          title: 'Czy jesteś pewien?',
-          text: 'Czy chcesz zapisać?',
-          action: 'event'
-        });
-        save.on('afterYesClick', () => {
-          this.$form.trigger('submit');
-        });
-      }
-    }
-  
-    initEvaluationInfo() {
-      let $estimationInfo = $(document.getElementById('estimationInfo'));
-      if($estimationInfo.length > 0) {
-        this.estimationInfo = new EstimationInfo($estimationInfo);
-      }
-    }
-  
-    initCostSummary() {
-      this.summaryCosts = new SummaryCosts($(document.getElementById('costSummary')));
-    }
-  
-    initEvaluationVariant() {
-      this.evaluationVariant = new EvaluationVariant($(document.getElementById('variants')));
-      this.evaluationVariant.on('overheadchange', () => {
-        this.costs.setOverhead(this.evaluationVariant.getOverhead());
-        this.costs.recalculateAll();
-        this.changed = true;
-      });
-    }
-  
-    initCosts() {
-      this.costs = new Costs($(document.getElementById('costs')), {
-        stage: this.stage
-      });
-      this.costs.on('change', (event) => {
-        this.summaryCosts.updateSummaryCosts(event.target.internalCost, event.target.externalCost);
-        this.evaluationVariant.setCosts(event.target.internalCost, event.target.externalCost);
-        if(this.estimationInfo !== null) {
-          this.estimationInfo.setHours(event.target.hours);
-        }
-        this.changed = true;
-      });
-      this.costs.setOverhead(this.evaluationVariant.getOverhead());
-      this.costs.recalculateAll();
-    }
-  
-    initTemplateSelect() {
-      //TODO: Zamknąć ten modal i komunikat zamkniecia w oddzielnym module (SensitiveContent?)
-      // Wysylanie templateow
-      let $templateChangeModal = $(document.getElementById('templateChangeModal')),
-        $templateSelect = $(document.getElementById('templateId'));
-  
-      $templateChangeModal.find('[data-dismiss="modal"]').off().on('click', () => {
-        $templateSelect.val('');
-      });
-  
-      $templateChangeModal.find('.btn-primary').off().on('click', () => {
-        this.changeTemplate();
-      });
-  
-      $templateSelect.on('change', () => {
-        let value = $templateSelect.val();
-        if(typeof value !== 'undefined' && value !== '') {
-  
-          if(this.changed) {
-            //$templateChangeModal.modal('show');
-            sweetAlertWarning({
-              title: 'Zamierzasz zmienić szablon wyceny.',
-              text: 'Utracisz wszystkie niezapisane w kosztorysie informacje. Kontynuować?'
-            },
-            (isConfirm) => {
-              if (isConfirm) {
-                this.changeTemplate();
-              }
-            });
-          }
-        }
-      });
-    }
-  
-    changeTemplate() {
-      this.$form.trigger('submit');
-    }
-  
-    initDuplicateForm() {
-      let $duplicateEstimation =
-        $(document.getElementById('duplicateEstimation'));
-      this.duplicateEstimationForm = new ModalForm($duplicateEstimation);
-      this.duplicateEstimationForm.on('afterLoad', ()=> {
-        new ClientProjectSelector();
-      });
-    }
-  
-    initHelpMessage() {
-      if(this.stage === 'typeUnsaved' || this.stage === 'typeDraft') {
-        toastrInfo(`W formularzu wyceny możesz stworzyć kosztorys
-          mający 4 zagłębienia. Pierwsze to etap, który po uruchomieniu
-          projektu będzie posiadał daty. Pozostałe to zadania,
-          które posiadają koszt.`, undefined, {
-          timeOut: 30000
-        });
-      } else if(this.stage === 'typeActive') {
-        // TODO: sprawdzić czy wszystkie daty są wypełnione i wyświetlić
-        // odpowieni komunikat
-      }
-    }
-  
-    initStartProject() {
-      if (window.K2.estimation.status_change === 1) {
-        toastrInfo(`Podaj daty wszystkich etapów oraz daty wystąpienia kosztów zewnętrznych. Po zapisaniu wyceny status
-          projektu zostanie zmieniony na "W produkcji". Projekt zostanie uruchomiony.`, undefined, {
-          timeOut: 30000
-        });
-      }
-    }
-  }
-  
-  module.exports = EstimationEdit;
-  
-  </code></pre>
-              <aside class="notes">
-                Przykład zastosowania mediatora wzięty z Toolboxa. Biorąc pod uwagę wcześniej
-                wspomniane poziomy abstrakcji EstimationEdit jest stroną (Page).
-                Zgodnie z definicją Mediatora łączy ze sobą hermetyczne komponenty
-                realizując pewne funkcjonalności. Dla ułatwienia zamykam każdą funkcjonalność
-                w oddzielną metodę chociaż nie jest to regułą. Z jednej strony
-                to nic nadzwyczajnego - klasa z metodami. Ale jak skrupulatnie
-                przestrzega się zasady łączenia komponentów poprzez mediatora
-                to nagle zauważa się że komponenty są przenaszalne a logikę można
-                łatwo poprawić/zmienić.
-                Jeszcze tak propos ilości linii w klasie - ta klasa równierz mieści
-                się w tym wymaganiu.
-              </aside>
-            </section>
-          </section>
-  
-          <!-- OBSERWATOR -->
-          <section>
+
             <section>
               <h2>Obserwator</h2>
               <p>Wwzorzec projektowy należący do grupy wzorców czynnościowych. Używany jest do powiadamiania zainteresowanych obiektów o zmianie stanu pewnego innego obiektu.</p>
-              <ul>
-                <li>Dlaczego Obserwator</li>
-                <li>Obserwator boilerplate</li>
-                <li>Przykładowa implementacja</li>
-                <li>Przykład zastosowania</li>
-              </ul>
               <aside class="notes">
                 Obserwator, Reactor, Dispatcher, Eventer, EventEmitter to są różne
                 nazwy koncepcji o której chciałbym opowiedzieć. Wszystkie różną się
                 implementacją ale idea pozostaje taka sama.
-              </aside>
-            </section>
-            <section>
-              <h2>Dlaczego Obserwator</h2>
-              <ul>
-                <li>Luźne powiązania</li>
-                <li>Komunikacja z klasą nadrzędną</li>
-              </ul>
-  <pre><code data-trim data-noescape>
-  class Mediator {
-    constructor() {
-  
-      this.functionality1();
-    }
-  
-    functionality1() {
-      let componentPopup = new ComponentPopup();
-      let componentTimeout = new ComponentTimeout();
-  
-      componentPopup.showPopup('ten popup NIE jest po timeoutcie');
-      // Co jeśli componentTimeout wykonuje się asynchronicznie a my chcemy
-      // poinformować o sukcesie za pomocą componentPopup? Fajnie by było wpiąć się
-      // w callbacka ale nie możemy tego zrobić bezpośrednio w componentTimeout
-    }
-  }
-  </code></pre>
-              <aside class="notes">
-                Dlaczego Obserwator? Mając mediator z jednej strony rozwiązujemy
-                problem bałaganu i ograniczamy błędy logiczne, a z drugiej strony
-                wiążemy sobie ręce ponieważ nie powinniśmy komunikować się
-                bezpośrednio między componentami. Tak jak napisałem tutaj w
-                komentarzu. Co jeśili jeden z komponentów wykonuje asynchroniczne
-                akcje na które musimy zareagować? Tutaj musimy użyć obserwatora.
               </aside>
             </section>
             <section>
@@ -664,6 +291,7 @@ initUi() {
     constructor() {
       super();
   
+      this.fire(...);
     }
   }
   
@@ -675,128 +303,319 @@ initUi() {
                 się z mediatorem. Poprostu jeżeli potrzeba to mediator podpina
                 listenera pod komponent i reaguje w określony sposób na jego zmiany.
                 Dodatkowo jeżeli chcemy wykorzystać component w innym miejscu to
-                możemy.
+                nadal możemy bo nie jest uzależniony od mediatora.
                 Implementacja polega na definicji komponentu tak aby mógł propagować
                 eventy. W tym wypadku użyłem klasy z npm SimpleEventer ale można
-                użyć dowolnego sposobu implementacji. Klasa SimpleEventer umożliwia
+                użyć dowolnej innej implementacji. Klasa SimpleEventer umożliwia
                 uruchomienie eventu poprzez metodę fire i podpięcie listenera za
                 pomocą metody on.
+                Później zobaczymy jak zaimplementować Obserwator.
+                Tymczasem.
+              </aside>
+            </section>
+          </section>
+
+          <section>
+            <section>
+              <h2>Podejście komponentowe</h2>
+              <img src="img/approach.jpg" alt="Alien approach to alien" title="Proper approach" />
+              <aside class="notes">
+                  Kojarzycie React'a? Vue? Stencil? Polymer? WebCOMPONENTS? Wszystkie nowoczesne frameworki czy biblioteki
+                  opierają się na podejściu komponentowym. Dlaczego lubicie podejście komponentowe?
+                  Czy chcieli byście tak pisać każdy projekt? Nie da się? Bo jquery?
+                  Wiecie że zły lub dobry kod można napisać niezależnie od tego czy korzysta się z frameworka czy nie?
+                  Framework ułatwia zachowanie porządku? A gdybyśmy sami o porządek dbali?
+                  No dobrze przykładowo React ma kilka ficzerów których nie przeskoczymy uzywając jquery.
+                  Ale patrząc tak z perspektywy sposobu pisania kodu - zamykania elementów w komponentach.
+                  Potem komponentów w kolejnych komponentach itd to nie ma tam nic czego w zwykłym js nie można byłoby napisać.
+                  Pomińmy jsx bo to jest zło konieczne :P
+                  Spróbujmy zblizyć się jak najbardziej do komponentowego podejścia pisania kodu używając tylko jquery.
+
+                  Argumenty przeciw:
+                  div hell
+                  HOC
+                  Lifecycle - tutaj szczegolnie moment w ktorym musimy ogrywac moment renderu
+                  taki odwrócony problem zmiany stanu czyli renter wtedy kiedy nie chcemy
+                  nieczytelny makaron jsx
+                  obsługa formularzy
+                  asynchroniczność
+                </aside>
+            </section>
+            <section>
+              <h2>Przykład komponentu React</h2>
+              <p>Status.js</p>
+<pre><code data-trim data-noescape>
+  import React from "react"
+  import { Link, navigate } from "@reach/router"
+  import { getCurrentUser, isLoggedIn, logout } from "../../utils/auth"
+  import styles from "./status.module.css"
+
+  export default () => {
+    let details
+    if (!isLoggedIn()) {
+      details = (
+        <p className={styles[`status__text`]}>
+          To get the full app experience, you’ll need to
+          {` `}
+          <Link to="/app/login">log in</Link>.
+        </p>
+      )
+    } else {
+      const { name, email } = getCurrentUser()
+
+      details = (
+        <p className={styles[`status__text`]}>
+          Logged in as {name} ({email}
+          )!
+          {` `}
+          <a
+            href="/"
+            onClick={event => {
+              event.preventDefault()
+              logout(() => navigate(`/app/login`))
+            }}
+          >
+            log out
+          </a>
+        </p>
+      )
+    }
+
+    return <div className={styles.status}>{details}</div>
+  }
+</code></pre>
+              <aside class="notes">
+                Spójrzcie na to.
+                ...
+                Do czego słuzy ten komponent kto mi powie? Plik nazywa się Status.js
+                Przecież to wygląda jak PHP we wczesnych czasach istnienia internetu!
+                Ok już nie roustuje. Jak widać można pisać paskudny kod w fajnej bibliotece.
+                Tak czy siak chcemy tak pisać. Więc co mają frameworki komponentowe co moglibyśmy
+                odtworzyć u nas w projekcie jquery?
               </aside>
             </section>
             <section>
-              <h2>Przykładowa implementacja</h2>
-              <p>Przykładowy obserwator - <a href="examples/observer.html" target="_blank">zobacz przykład</a>.</p>
+              <h2>Komponenty! (sic!)</h2>
+<pre><code data-trim data-noescape>
+class Component {
+
+}
+</code></pre>
+              <aside class="notes">
+                  Mają komponenty! Tak. W projektach jQuery też możemy mieć komponenty. Zazwyczaj wystepują w dwóch rodzajach.
+                  Funkcja zwracająca html lub klasa z odpowiednimi metodami. W jquery możemy zwracać html ale nie mając jsx musieli
+                  byśmy pisać własny parser a to sie mija z celem. Więc funkcje zwracające html pominiemy. Wykorzystajmy klasę.
+                  Co jeszcze mają?
+                </aside>
+            </section>
+            <section>
+            <h2>DOM!</h2>
   <pre><code data-trim data-noescape>
-  class ComponentTimeout extends SimpleEventer {
-    constructor() {
-      super();
-  
-      this.initTimeout();
-    }
-  
-    initTimeout() {
-      setTimeout(() => {
-        this.fire('afterTimeout');
-      }, 2000);
-    }
-  }
-  
-  class Mediator {
-    constructor() {
-  
-    this.componentPopup = new ComponentPopup();
-    this.componentTimeout = new ComponentTimeout();
-  
-    this.functionality1();
-  }
-  
-    functionality1() {
-      this.componentTimeout.on('afterTimeout', () => {
-        this.componentPopup.showPopup('po timeoutce'); // po timeoutce
-      });
+  class Component {
+    constructor($context) {
+      this.$context = $context;
+
     }
   }
   </code></pre>
+                <aside class="notes">
+                    Tak komponenty w React przykładowo operują na virtual dom. Możemy mieć bibliotekę do tego ale umówmy się
+                    że vanilla js na głównym DOM jest szybsze. Tutaj trzeba zauważyc coś jeszcze. Komponenty najczęściej
+                    operują na fragmencie DOM na którym działają i nie wychodzą poza niego, ale modyfikują zachowanie i wygląd
+                    elementów wewnątrz których dotyczy funkcjonalność komponetu. Jak to zrobimy u nas? Przekażmy fragment DOM jako
+                    pierwszy paramter! Ja lubię nazwyać go $context.
+                    Co jeszcze mają?
+                  </aside>
+              </section>
+              <section>
+                <h2>Stan!</h2>
+<pre><code data-trim data-noescape>
+const defaults = {
+  text: 'stan poczatkowy'
+}
+
+class Component {
+  constructor($context, options) {
+    this.$context = $context;
+    this.settings = Object.assign({}, defaults, options);
+    
+  }
+}
+</code></pre>
               <aside class="notes">
-                Przykładowy sposób wykorzystania wzorca obserwatora. W tym wypadku
-                Mediator staje się jednocześnie obserwatorem componentów.
-                Obserwuje componentTimeout i reaguje na zmianę za pomocą
-                componentPopup wyświetlając odpowiedni komunikat. W połączeniu oba
-                wzorce dają możliwość elastycznego łączenia ze sobą komponentów
-                w relacji wiele do wielu nie ingerując w logikę samych komponentów.
-                Co więcej logikę zależności można napisać w ramach klasy i w razie
-                potrzeby podzielić ją na metody.
+                Dobrze mają stan. Tutaj też możemy użyć biblioteki do stanów niemutowalnych i w przypadku zmiany odpowiednio reagować.
+                Ale załóżmy że pominiemy niemutowalnośc bo nie mamy maszyny stanów takiej jak Redux. Nie mamy też metody render
+                bo nie mamy jsx. Ale możemy mieć stan początkowy - defaults. Możemy też przyjmować opcje (props jak w react!).
+                Moglibyśmy też odczytywać z $context data-attributes jako dodatkowe props! Możemy w razie potrzeby defiinować set i get
+                dla settings i reagować na zmianę! this.settings zaczyna wyglądać jak this.state z reacta. Ja na codzien nazywam to
+                settings ponieważ używam tego bardziej jak konfigurację niż stan.
+                Co jeszcze mają?
               </aside>
             </section>
             <section>
-              <h2>Przykład zastosowania</h2>
-              <p>Klasa EstimationEdit z Toolboxa</p>
-  <pre><code data-trim data-noescape>
-  
-  class EstimationEdit extends Service {
-    constructor($context, options = {}) {
-      (...)
+                <h2>Kompnenty w komponentach!</h2>
+<pre><code data-trim data-noescape>
+import Component2 from './component2';
+
+const defaults = {
+  text: 'stan poczatkowy'
+}
+
+class Component {
+  constructor($context, options) {
+    this.$context = $context;
+    this.settings = Object.assign({}, defaults, options);
+
+    this.init();
+  }
+
+  init() {
+    this.component2 = new Component2(this.$context.find('.js-component2'));
+  }
+}
+</code></pre>
+              <aside class="notes">
+                Tak... Nie mamy jsx i co teraz? Musimy poradzić sobie trochę inaczej. HTML zakładamy że mamy gdzieś renderowany przez serwer.
+                Nie ma sensu renderować go od nowa. W takim razie zakładamy że w HTML już jest komponent w komponencie. Wygląd obu w css.
+                Pozostała tylko inicjalizacja funkcjonalności. Więc importujemy zupełnie jak w React klasę komponentu 2 i uruchamiamy go na odpowiednich
+                elemetach. Tutaj pokazuję bardzo uproszczoną wersję inicjalizacji. Jest w niej jeden koncepcyjny bład. Ktoś ma pomysł?
+                ...
+                Co jeszcze mają?
+              </aside>
+            </section>
+            <section>
+            <h2>Wincyj komponentuf!</h2>
+<pre><code data-trim data-noescape>
+import Menu from './menu';
+import Content from './content';
+import Footer from './footer';
+
+const defaults = {
+  text: 'stan poczatkowy'
+}
+
+class App {
+  constructor($context = $('body'), options) {
+    this.$context = $context;
+    this.settings = Object.assign({}, defaults, options);
+
+    this.init();
+  }
+
+  init() {
+    this.initMenu();
+    this.initContent();
+    this.initFooter();
+  }
+
+  initMenu() {
+    this.menus = this.$context.find('.js-menu').each((index, element) => new Menu($(element))); 
+  }
+
+  initContent() {
+    this.contents = this.$context.find('.js-content').each((index, element) => new Content($(element))); 
+  }
+
+  initFooter() {
+    this.footer = this.$context.find('.js-footer').each((index, element) => new Footer($(element))); 
+  }
+}
+</code></pre>
+              <aside class="notes">
+                Wincyj. Ok mamy trzy komponenty. Definicje zmienione już na pętle just in case. W środku Menu oczywiście możemy mieć więcej takich komponentów.
+                Tak samo w środku Content i w środku Footer. Gdyby spojrzeć na to z perspektywy zobaczyło by się drzewo gdzie korzeniem jest App, gałęziami
+                Menu, Content, Footer a listkami jakieś mniejsze komponenty.
+                Ok to już wszytsko mamy? NIE!
+                Czego brakuje?
+                ...
+                O ile w górę drzewa możemy się komunikować. O tyle w dół już nie. Menu nie wie o istnieniu Contentu a nawet App.
+                I dobrze! Bo inaczej Menu byłoby nieprzenaszalne. Ale jak rozwiązać komunikację w takim razie?
+                Czyli co jeszcze mają frameworki z podejściem komponentowym?
+              </aside>
+            </section>
+            <section>
+                <h2>Komponenty rozmawiajo!</h2>
+    <pre><code data-trim data-noescape>
+    import Menu from './menu';
+    import Content from './content';
+    import Footer from './footer';
+    
+    const defaults = {
+      text: 'stan poczatkowy'
     }
-  
-    initUi() {
-      this.initEvaluationInfo();
-      this.initCostSummary();
-      this.initEvaluationVariant();
-      this.initCosts();
-      (...)
-    }
-  
-  
-    initEvaluationInfo() {
-      let $estimationInfo = $(document.getElementById('estimationInfo'));
-      if($estimationInfo.length > 0) {
-        this.estimationInfo = new EstimationInfo($estimationInfo);
+    
+    class App {
+      constructor($context = $('body'), options) {
+        this.$context = $context;
+        this.settings = Object.assign({}, defaults, options);
+    
+        this.init();
+      }
+    
+      init() {
+        this.initMenu();
+        this.initContent();
+        this.initFooter();
+      }
+    
+      initMenu() {
+        this.menu = new Menu(this.$context.find('.js-menu'));
+      }
+    
+      initContent() {
+        this.content = new Content(this.$context.find('.js-content')); 
+        this.menu.on('button-clicked', ({target: button}) => {
+            this.content.load(button.url);
+        });
+      }
+    
+      initFooter() {
+        this.footer = this.$context.find('.js-footer').each((index, element) => new Footer($(element))); 
       }
     }
-  
-    initCostSummary() {
-      this.summaryCosts = new SummaryCosts($(document.getElementById('costSummary')));
+    </code></pre>
+                <aside class="notes">
+                  Załóżmy że po kliknięciu w Menu chcemy przeładować tylko Content.
+                  Załóżmy że content nawet wystawia metodę load która przyjmuje url.
+                  Jak zareagować na kliknięcie w środku Menu? Nie nie szukamy przycisków za pmocą jquery.
+                  Zgodnie z podejściem kompoentowym to Menu zajmuje się elementami w środku js-menu.
+                  Musimy zaimplementować jakiś Eventer na menu. Tak aby po kliknięciu emitował event
+                  o określonej nazwie.
+                  Widzicie do czego dążymy? Z każdym ficzerem zaczerpniętym z podejścia komponentowego
+                  zbliżamy się jednocześnie do wzorca Mediator-Obserwator. To dlatego że
+                  praktycznie każdy framework oparty na komponentach implementuje ten wzorzec.
+                  Komponenty komunikują się ze swoim rodzicem za pomocą eventów. Rodzice natomiast
+                  zmieniając stan dzieci komunikują się w drugą stronę.
+                  Coś jeszcze?
+                </aside>
+              </section>
+              <section>
+                  <h2>Ale ja kce REDUX bo bez niego nie ma życia i wogóle!</h2>
+<pre><code data-trim data-noescape>
+class Redux extends SimpleEventer {
+  constructor() {
+    super();
+
+    if(EmptySingleton.singletonInstance) {
+      return EmptySingleton.singletonInstance;
     }
-  
-    initEvaluationVariant() {
-    this.evaluationVariant = new EvaluationVariant($(document.getElementById('variants')));
-      this.evaluationVariant.on('overheadchange', () => {
-        this.costs.setOverhead(this.evaluationVariant.getOverhead());
-        this.costs.recalculateAll();
-        this.changed = true;
-      });
-    }
-  
-    initCosts() {
-      // Costs też jest mediatorem
-      this.costs = new Costs($(document.getElementById('costs')), {
-        stage: this.stage
-      });
-      this.costs.on('change', (event) => {
-        this.summaryCosts.updateSummaryCosts(event.target.internalCost, event.target.externalCost);
-        this.evaluationVariant.setCosts(event.target.internalCost, event.target.externalCost);
-        if(this.estimationInfo !== null) {
-          this.estimationInfo.setHours(event.target.hours);
-        }
-        this.changed = true;
-      });
-      this.costs.setOverhead(this.evaluationVariant.getOverhead());
-      this.costs.recalculateAll();
-    }
-    (...)
+
+    EmptySingleton.singletonInstance = this;
   }
-  
-  </code></pre>
-              <aside class="notes">
-                W przypadku dużej ilości komponentów możliwe jest równierz
-                utworzenie drzewiastej struktury Mediatorów gdzie mediator1 może
-                być obserwatorem mediatora2. Tak jest w przypadku wcześniej już
-                pokazanej klasy EstimationEdit z toolboxa.
-                Klasa ta reaguje na zmiany w komponentach i propaguje je na inne
-                komponenty z których Costs jest Mediatorem dla grupy innych
-                komponentów.
-              </aside>
-            </section>
+}
+</code></pre>
+                  <aside class="notes">
+                    Proszę bardzo. Nie wiem czy to działa ale to jest jeden ze scenariuszy gdzie można wykorzystać Singleton.
+                    Poza tym SimpleEventer ma metody statyczne które można wywoływać globalnie. A redux tym właśnie jest.
+                    I jeszcze jedna rzecz nim przejdziemy do bardziej praktycznej rzeczy. Zawsze nim zaczę pisać jakiś
+                    komponent zastanawiam się gdzie go postawić. Czy bardziej po stronie aplikacji? Czy może jednak
+                    jako narzędzie? Ułatwia mi to przełknięcie braku uniwersalności w części aplikacyjnej, i braku specyficzności
+                    (nie wiem czy istnieje takie słowo) w części narzędziowej. Przykładami Części aplikacyjnej tutaj były Menu, Header, Content.
+                    Część narzędziowa natomiast to SimpleEventer lub Redux.
+                    Pytania?
+                    Napiszmy coś razem. Nie przygotowałem nic poza danymi i pomysłem więc w części praktycznej napiszemy jakąś listę z filtrownicą może co?
+                  </aside>
+                </section>
           </section>
 
 
