@@ -51,7 +51,7 @@
               Przedstawię wam takie najbardziej przydatne który MOIM ZDANIEM mają największy wpływ na każdy z wczesniej wymienionych tematów.
               Dużo z tych imformacji będzie pewnie powtórzeniem (podobme szkolenie już było). Ale myślę że każdy też znajdzie w nim coś dla siebie.
               Na koniec na tyle na ile nam czasu zostanie przedyskutujemy sobie kilka przypadków podczas pisania których często pojawiają się
-              znaki zapytania. Ale to nie znaczy że nie macie się odzywać przy pierwszych dwóch tematach. Wręcz przeciwnie, chciałbym zachęcić was do 
+              znaki zapytania. Ale to nie znaczy że nie macie się odzywać przy pierwszych dwóch tematach. Wręcz przeciwnie, chciałbym zachęcić was do
               aktywnego udziału przez CAŁE DWIE GODZINY!
             </aside>
           </section>
@@ -169,8 +169,8 @@ initUi() {
               Inicjalizowane jest UI a w tym informacje o wycenie, podsumowanie kosztów, wariant wyceny,
               koszty, wybierak templatek, formularz duplikowania, skróty, jakieś wiadomości pomocnicze
               i coś o rozpoczęciu projektu. Inicjalizowanie czyli pewnie wykonuje się na początku przy starcie
-              strony. 
-              
+              strony.
+
               Z tego miejsca od razu wiadomo gdzie czegoś szukać. Jeżeli mam zmienić coś związanego
               z wybierakiem to pewnie znajdę to w initTemplateSelect.
 
@@ -256,7 +256,7 @@ class EmptySingleton {
   <pre><code data-trim data-noescape>
     class EmptyMediator {
       constructor() {
-  
+
       }
     }
   </code></pre>
@@ -291,11 +291,11 @@ class EmptySingleton {
   class ComponentTimeout extends SimpleEventer {
     constructor() {
       super();
-  
+
       this.fire(...);
     }
   }
-  
+
   // component1.on(...) po stronie obserwatora
   </code></pre>
               <aside class="notes">
@@ -439,7 +439,7 @@ class Component {
   constructor($context, options) {
     this.$context = $context;
     this.settings = Object.assign({}, defaults, options);
-    
+
   }
 }
 </code></pre>
@@ -510,15 +510,15 @@ class App {
   }
 
   initMenu() {
-    this.menus = this.$context.find('.js-menu').each((index, element) => new Menu($(element))); 
+    this.menus = this.$context.find('.js-menu').each((index, element) => new Menu($(element)));
   }
 
   initContent() {
-    this.contents = this.$context.find('.js-content').each((index, element) => new Content($(element))); 
+    this.contents = this.$context.find('.js-content').each((index, element) => new Content($(element)));
   }
 
   initFooter() {
-    this.footer = this.$context.find('.js-footer').each((index, element) => new Footer($(element))); 
+    this.footer = this.$context.find('.js-footer').each((index, element) => new Footer($(element)));
   }
 }
 </code></pre>
@@ -540,38 +540,38 @@ class App {
     import Menu from './menu';
     import Content from './content';
     import Footer from './footer';
-    
+
     const defaults = {
       text: 'stan poczatkowy'
     }
-    
+
     class App {
       constructor($context = $('body'), options) {
         this.$context = $context;
         this.settings = Object.assign({}, defaults, options);
-    
+
         this.init();
       }
-    
+
       init() {
         this.initMenu();
         this.initContent();
         this.initFooter();
       }
-    
+
       initMenu() {
         this.menu = new Menu(this.$context.find('.js-menu'));
       }
-    
+
       initContent() {
-        this.content = new Content(this.$context.find('.js-content')); 
+        this.content = new Content(this.$context.find('.js-content'));
         this.menu.on('button-clicked', ({target: button}) => {
             this.content.load(button.url);
         });
       }
-    
+
       initFooter() {
-        this.footer = this.$context.find('.js-footer').each((index, element) => new Footer($(element))); 
+        this.footer = this.$context.find('.js-footer').each((index, element) => new Footer($(element)));
       }
     }
     </code></pre>
@@ -587,6 +587,155 @@ class App {
                   praktycznie każdy framework oparty na komponentach implementuje ten wzorzec.
                   Komponenty komunikują się ze swoim rodzicem za pomocą eventów. Rodzice natomiast
                   zmieniając stan dzieci komunikują się w drugą stronę.
+                  Coś jeszcze?
+                </aside>
+              </section>
+            <section>
+                <h2>Apps waży już 4MB!</h2>
+    <pre><code data-trim data-noescape>
+import browserCheck from './modules/browser-check';
+import sticky_IE_Fix from './modules/ie-fix';
+
+class App {
+
+  constructor() {
+    this.$body = $(document.body);
+
+    this.init();
+  }
+
+  init() {
+    this.initAboveTheFold();
+    this.initPage();
+  }
+
+  initAboveTheFold() {
+    browserCheck();
+    sticky_IE_Fix();
+  }
+
+  initPage() {
+    this.initArchivePage();
+    this.initArticlePage();
+    this.initCategoryPage();
+    this.initEncyclopediaPage();
+    this.initGalleryPage();
+    this.initHomepagePage();
+    this.initQuizPage();
+    this.initSubpagePage();
+    this.initSearchPage();
+    this.initSurveyPage();
+  }
+
+  initArchivePage() {
+    if(this.$body.hasClass('js-archive-page')) {
+      return import(/* webpackChunkName: "archive-page" */ './pages/archive-page').then(({ default: ArchivePage }) => {
+          this.archivePage = ArchivePage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the archive page'); console.error(error); });
+    }
+  }
+
+  initArticlePage() {
+    if(this.$body.hasClass('js-article-page')) {
+      return import(/* webpackChunkName: "article-page" */ './pages/article-page').then(({ default: ArticlePage }) => {
+          this.articlePage = ArticlePage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the article page'); console.error(error); });
+    }
+  }
+
+  initCategoryPage() {
+    if(this.$body.hasClass('js-category-page')) {
+      return import(/* webpackChunkName: "category-page" */ './pages/category-page').then(({ default: CategoryPage }) => {
+          this.categoryPage = CategoryPage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the category page'); console.error(error); });
+    }
+  }
+
+  initEncyclopediaPage() {
+    if(this.$body.hasClass('js-encyclopedia-page')) {
+      return import(/* webpackChunkName: "encyclopedia-page" */ './pages/encyclopedia-page').then(({ default: EncyclopediaPage }) => {
+          this.encyclopediaPage = EncyclopediaPage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the encyclopedia page'); console.error(error); });
+    }
+  }
+
+  initGalleryPage() {
+    if(this.$body.hasClass('js-gallery-page')) {
+      return import(/* webpackChunkName: "gallery-page" */ './pages/gallery-page').then(({ default: GalleryPage }) => {
+          this.galleryPage = GalleryPage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the gallery page'); console.error(error); });
+    }
+  }
+
+  initHomepagePage() {
+    if(this.$body.hasClass('js-homepage-page')) {
+      return import(/* webpackChunkName: "homepage-page" */ './pages/homepage-page').then(({ default: HomepagePage }) => {
+          this.homepagePage = HomepagePage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the homepage page'); console.error(error); });
+    }
+  }
+
+  initQuizPage() {
+    if(this.$body.hasClass('js-quiz-page')) {
+      return import(/* webpackChunkName: "quiz-page" */ './pages/quiz-page').then(({ default: QuizPage }) => {
+          this.quizPage = QuizPage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the quiz page'); console.error(error); });
+    }
+  }
+
+  initSubpagePage() {
+    if(this.$body.hasClass('js-subpage-page')) {
+      return import(/* webpackChunkName: "subpage-page" */ './pages/subpage-page').then(({ default: SubpagePage }) => {
+          this.subpagePage = SubpagePage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the subpage page'); console.error(error); });
+    }
+  }
+
+  initSearchPage() {
+    if(this.$body.hasClass('js-search-page')) {
+      return import(/* webpackChunkName: "search-page" */ './pages/search-page').then(({ default: SearchPage }) => {
+          this.searchPage = SearchPage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the search page'); console.error(error); });
+    }
+  }
+
+  initSurveyPage() {
+    if(this.$body.hasClass('js-survey-page')) {
+      return import(/* webpackChunkName: "survey-page" */ './pages/survey-page').then(({ default: SurveyPage }) => {
+          this.surveyPage = SurveyPage.initialize();
+      }).catch(error => { console.error('An error occurred while loading the survey page'); console.error(error); });
+    }
+  }
+
+
+
+  //initModules() {
+     //background();
+     //parallax();
+     //featured_posts_carousel();
+     //categoryCarousel();
+     //offTopicCarousel();
+     //masonryGallery();
+     //progressIndicator();
+     //chart();
+     //toggleContent();
+     //lightBox();
+     //tabs();
+     //accordion();
+     //
+  //}
+
+}
+
+    </code></pre>
+                <aside class="notes">
+                  W przypadku małych stron takie podejście sprawdza się wysmienicie.
+                  Klient dostaje jeden w sumie nie duży plik js i strona działa.
+                  A co w przypadku gdy plik po zbudowaniu zajmuje nam 4MB?
+                  Z pomoc przychodzi dynamiczne ładowanie.
+                  Można uzależnic je od poziomu abstrakcji
+                  w tym wypadku uzależnione jest od strony na ktrej znajduje się użytkownik.
+                  Ale można przyjć dowolny inny sposb. Przykładowo above the fold i below the fold.
                   Coś jeszcze?
                 </aside>
               </section>
